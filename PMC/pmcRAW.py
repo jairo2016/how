@@ -10,23 +10,23 @@ import uploadS3 as upds3
 if os.path.exists('arquivosPMC') == False:
     os.mkdir('arquivosPMC')
 
-# verifica se a pasta ultimoImportado existe e, se não, cria a mesma
-if os.path.exists('ultimoImportado') == False:
-    os.mkdir('ultimoImportado')    
+# verifica se a pasta ultimoBaixado existe e, se não, cria a mesma
+if os.path.exists('ultimoBaixado') == False:
+    os.mkdir('ultimoBaixado')    
 
-# verifica se o arquivo ultimoImportado.txt existe e, se não, cria o mesmo
-if os.path.exists('ultimoImportado/ultimoImportado.txt') == False:
-    arquivo = open('ultimoImportado/ultimoImportado.txt','w')
+# verifica se o arquivo ultimoBaixado.txt existe e, se não, cria o mesmo
+if os.path.exists('ultimoBaixado/ultimoBaixado.txt') == False:
+    arquivo = open('ultimoBaixado/ultimoBaixado.txt','w')
     arquivo.write("vazio")
     arquivo.close
 
-# lê o arquivo ultimoImportado.txt para pegar o último arquivo baixado
-arquivo = open('ultimoImportado/ultimoImportado.txt','r')
+# lê o arquivo ultimoBaixado.txt para pegar o último arquivo baixado
+arquivo = open('ultimoBaixado/ultimoBaixado.txt','r')
 for linha in arquivo:
     linha = linha.rstrip()
 arquivo.close()
 
-# verifica se o arquivo ultimoImportado.txt tem a informação do último arquivo.xls baixado
+# verifica se o arquivo ultimoBaixado.txt tem a informação do último arquivo.xls baixado
 if linha == 'vazio':
     url = 'https://ftp.ibge.gov.br/Comercio_e_Servicos/Pesquisa_Mensal_de_Comercio/Tabelas/2018/pmc_201801_00.xls'   
 else:
@@ -76,6 +76,6 @@ while True: # loop infinito que procura até 12 sequências de arquivos dentro d
                 break
 
 if len(ultimaURL) > 0: # grava a posição do último arquivo pmc.xls baixado
-    arquivo = open('ultimoImportado/ultimoImportado.txt','w')
+    arquivo = open('ultimoBaixado/ultimoBaixado.txt','w')
     arquivo.write(ultimaURL)
     arquivo.close     
