@@ -1,14 +1,22 @@
+''' CAMADA BRONZE:
+    BAIXA OS ARQUIVOS .xls DISPONÍVEIS NO SITE DO IBGE NO ITEM DE COMÉRCIO E SERVIÇOS E
+    ARMAZENA NO BUCKET arquivosPMCrawS3 COMO DADOS BRUTOS:
+
+    https://ftp.ibge.gov.br/Comercio_e_Servicos/Pesquisa_Mensal_de_Comercio/Tabelas
+'''
+
 import os
 from socket import timeout
 import urllib.request
 import requests
 import datetime
 import eventlet
+import pandas as pd
 import uploadS3 as upds3
 
 # verifica se a pasta arquivosPMC existe e, se não, cria a mesma
-if os.path.exists('arquivosPMC') == False:
-    os.mkdir('arquivosPMC')
+if os.path.exists('arquivosPMCraw') == False:
+    os.mkdir('arquivosPMCraw')
 
 # verifica se a pasta ultimoBaixado existe e, se não, cria a mesma
 if os.path.exists('ultimoBaixado') == False:
@@ -54,10 +62,10 @@ while True: # loop infinito que procura até 12 sequências de arquivos dentro d
             #print('Web site exists')
             print('..... baixa arquivo - ' + str(datetime.datetime.now()))
             with eventlet.Timeout(None):
-                urllib.request.urlretrieve(url, 'arquivosPMC/' + url[85:102])
+                urllib.request.urlretrieve(url, 'arquivosPMCraw/' + url[85:102])
 
             print('..... arquivo baixado - ' + str(datetime.datetime.now()))
-            upds3.upload_fileS3('arquivosPMC/' + url[85:102], 'arquivosPMCs3', 'aws_access_key', 'aws_secret_key')
+            upds3.upload_fileS3('arquivosPMCraw/' + url[85:102], 'arquivosPMCrawS3', 'aws_access_key', 'aws_secret_key')
             ultimaURL = url
 
     else: # passa para o próximo mês e verifica se quebrou o ano
@@ -78,4 +86,4 @@ while True: # loop infinito que procura até 12 sequências de arquivos dentro d
 if len(ultimaURL) > 0: # grava a posição do último arquivo pmc.xls baixado
     arquivo = open('ultimoBaixado/ultimoBaixado.txt','w')
     arquivo.write(ultimaURL)
-    arquivo.close     
+    arquivo.close    
