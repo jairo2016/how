@@ -1,3 +1,6 @@
+''' UPLOADS3:
+    Faz upload de qualquer tipo de arquivo para o bucket informado
+'''
 import boto3
 
 #BUCKET = "flaskdrive"
